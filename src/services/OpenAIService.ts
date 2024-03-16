@@ -50,7 +50,7 @@ export class OpenAiService {
     };    
   }
 
-  async sendAudio(filePath: string) {
+  async sendAudio(filePath: string, thread: string) {
     const openAi = new OpenAI({
       apiKey: this.apiKey
     });
@@ -60,6 +60,6 @@ export class OpenAiService {
       model: "whisper-1",
     });
 
-    return transcription;
+    return this.sendMessage(transcription.text, thread);
   }
 }

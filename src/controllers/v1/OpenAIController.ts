@@ -1,6 +1,6 @@
 import { MulterOptions, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
-import { BodyParams } from "@tsed/platform-params";
+import { BodyParams, HeaderParams } from "@tsed/platform-params";
 import { Post } from "@tsed/schema";
 import { OpenAiService } from "src/services/OpenAIService";
 import fs from "fs";
@@ -28,12 +28,12 @@ export class OpenAIController {
     },
     dest: "./tmp-audios",
   })
-  async getAudioModel(@MultipartFile("file") file: PlatformMulterFile) {
+  async getAudioModel(@HeaderParams("thread") thread: string, @MultipartFile("file") file: PlatformMulterFile) {
     const filePath = `${file.path}.mp3`;
 
     fs.renameSync(file.path, filePath);
     
-    const transcription = await this.openAiService.sendAudio(filePath).finally(() => {
+    const transcription = await this.openAiService.sendAudio(filePath, thread).finally(() => {
       fs.unlinkSync(filePath);
     });
     
