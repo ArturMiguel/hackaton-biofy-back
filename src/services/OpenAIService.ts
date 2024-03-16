@@ -1,5 +1,6 @@
 import { Injectable } from "@tsed/di";
 import OpenAI from "openai";
+import fs from "fs";
 
 @Injectable()
 export class OpenAiService {
@@ -49,7 +50,7 @@ export class OpenAiService {
     };    
   }
 
-  async processImage(base64Img: string) { 
+  async processImage(base64Img: string) {
     const openAi = new OpenAI({
       apiKey: this.apiKey
     });
@@ -78,4 +79,18 @@ export class OpenAiService {
 
     return response;
   }
+
+  async sendAudio(filePath: string, thread: string) {
+    const openAi = new OpenAI({
+      apiKey: this.apiKey
+    });
+    
+    const transcription = await openAi.audio.transcriptions.create({
+      file: fs.createReadStream(filePath),
+      model: "whisper-1",
+    });
+
+    return this.sendMessage(transcription.text, thread);
+  }
+
 }
