@@ -42,10 +42,15 @@ export class OpenAiService {
       })
     }
 
-    const messages = await openAi.beta.threads.messages.list(threadId);
+    const messages: any = await openAi.beta.threads.messages.list(threadId);
 
     return {
       messages: messages,
+      lastMessage: {
+        message: messages.body.data[0].content[0].text.value.replace(/\n/g, "<br>"),
+        type: messages.body.data[0].role == "assistant" ? "BOT" : "USER",
+        thread: threadId
+      },
       thread: threadId
     };    
   }
