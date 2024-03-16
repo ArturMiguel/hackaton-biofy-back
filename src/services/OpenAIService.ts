@@ -1,5 +1,6 @@
 import { Injectable } from "@tsed/di";
 import OpenAI from "openai";
+import fs from "fs";
 
 @Injectable()
 export class OpenAiService {
@@ -47,5 +48,18 @@ export class OpenAiService {
       messages: messages,
       thread: threadId
     };    
+  }
+
+  async sendAudio(filePath: string) {
+    const openAi = new OpenAI({
+      apiKey: this.apiKey
+    });
+
+    const transcription = await openAi.audio.transcriptions.create({
+      file: fs.createReadStream(filePath),
+      model: "whisper-1",
+    });
+
+    return transcription;
   }
 }
