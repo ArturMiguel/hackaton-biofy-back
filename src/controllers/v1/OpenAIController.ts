@@ -1,6 +1,6 @@
 import { Controller, Inject, Injectable } from "@tsed/di";
 import { BodyParams } from "@tsed/platform-params";
-import { Get } from "@tsed/schema";
+import { Get, Post } from "@tsed/schema";
 import OpenAI from "openai";
 import { OpenAiService } from "src/services/OpenAIService";
 
@@ -23,5 +23,10 @@ export class OpenAIController {
   @Get("/audios")
   async getAudioModel() {
 
+  }
+
+  @Post("/images")
+  async getImageModel(@BodyParams() body: any) {
+    return this.openAiService.processImage(body.image)
   }
 }

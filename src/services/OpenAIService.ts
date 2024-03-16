@@ -48,4 +48,34 @@ export class OpenAiService {
       thread: threadId
     };    
   }
+
+  async processImage(base64Img: string) { 
+    const openAi = new OpenAI({
+      apiKey: this.apiKey
+    });
+
+    const response = await openAi.chat.completions.create({
+      model: "gpt-4-vision-preview",
+      messages: [
+        {
+          role: "system",
+          content: "Você é um assistente agricula para identificar problemas de saude e peste em imagens"
+        },
+        {
+          role: "user",
+          content:  [
+            { type: "text", text: "Quais problemas você identifica nessa imagem" },
+            {
+              type: "image_url",
+              image_url: {
+                "url": base64Img
+              }
+            }
+          ]
+        }
+      ]
+    })
+
+    return response;
+  }
 }
