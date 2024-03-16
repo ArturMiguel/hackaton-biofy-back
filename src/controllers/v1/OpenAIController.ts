@@ -13,11 +13,12 @@ export class OpenAIController {
 
   @Post("/texts")
   async getTextModel(@BodyParams() body: any) {
-    const { messages, thread } = await this.openAiService.sendMessage(body.message, body.thread);
+    const { messages, thread, lastMessage } = await this.openAiService.sendMessage(body.message, body.thread);
 
     return {
       message: messages,
-      thread: thread
+      thread: thread,
+      lastMessage
     };
   }
 
