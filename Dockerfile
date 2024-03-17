@@ -38,6 +38,7 @@ RUN npm install -g pm2
 
 COPY --from=build /opt .
 
+RUN yarn config set ignore-engines true
 RUN yarn install --pure-lockfile --production
 
 COPY processes.config.js .

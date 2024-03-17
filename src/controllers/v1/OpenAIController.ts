@@ -2,7 +2,7 @@ import { Controller, Inject, Injectable } from "@tsed/di";
 import { MulterOptions, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { BodyParams, HeaderParams } from "@tsed/platform-params";
 import { Post } from "@tsed/schema";
-import { OpenAiService } from "src/services/OpenAIService";
+import { OpenAiService } from "../../services/OpenAIService";
 import fs from "fs";
 
 @Controller("/ia-models")
