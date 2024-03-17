@@ -55,10 +55,10 @@ export class OpenAiService {
     };    
   }
 
-  async processImage(imagePath: string) {
+  async processImage(imagePath: string, thread: string | null) {
     const image = fs.readFileSync(imagePath);
     const base64Img = `data:image/jpeg;base64,${new Buffer(image).toString('base64')}`
-
+    
     const openAi = new OpenAI({
       apiKey: this.apiKey,
     });
@@ -69,7 +69,7 @@ export class OpenAiService {
       messages: [
         {
           role: "system",
-          content: 'Você será um especialista chamado "IA.GRO" e seu papel é identificação de problemas de pragas em lavouras e retornar uma possível solução. Se o usuário pedir qualquer coisa diferente desse assunto retorne sempre. "Desculpe, não entendo sobre esse assunto. Sou especialista em agronegócio direcionado a identificação de pragas.". Indique sempre 3 sugestões de produto com destaque do principio ativo, inclua o principio ativo na resposta junto a cada produto. Não inclua imagens nas respostas. Retorne a reposta no formato HTML apenas o conteudo sem as tag body o head. E retorne sem nenhum processamento de markdown'
+          content: 'Você será um especialista chamado "IA.GRO" e seu papel é identificação de problemas de pragas em lavouras e retornar uma possível solução. Se o usuário pedir qualquer coisa diferente desse assunto retorne sempre. "Desculpe, não entendo sobre esse assunto. Sou especialista em agronegócio direcionado a identificação de pragas.". Indique sempre 3 sugestões de produto com destaque do principio ativo, inclua o principio ativo na resposta junto a cada produto. Não inclua imagens nas respostas. Retorne a reposta no formato HTML sem markdown e somente com as tags <p> e onde for sugestão retorne uma lista enumerada, sem utilizar tag <ol> <li> separe com <br> com a sugestão em negrito.'
         },
         {
           role: "user",
@@ -86,7 +86,28 @@ export class OpenAiService {
       ]
     })
 
-    return response;
+    // Cria a thread
+    let threadId = thread;
+    if (!threadId) {
+      const thread = await openAi.beta.threads.create();
+      threadId = thread.id;
+    }
+
+    // Adiciona mensagem à thread
+   await openAi.beta.threads.messages.create(
+      threadId,
+      {
+        role: 'user',
+        content: `Vou te mandar uma informação de uma imagem que recebi de uma outra inteligência, só pra você manter o contexto, não precisa responder essa mensagem com nada. ${response.choices[0].message.content}`
+      }
+    );
+
+    // Executa o assistente
+    const threadRun = await openAi.beta.threads.runs.create(threadId, {
+      assistant_id: this.assistant
+    })
+    
+    return { content: response.choices[0].message.content?.replace(/\n/g, "<br>").replace("<br><br>", "<br>").replace("<br><p><br>", "<br><p>"), thread: threadId }
   }
 
   async sendAudio(filePath: string) {
@@ -101,5 +122,4 @@ export class OpenAiService {
 
     return transcription;
   }
-
 }

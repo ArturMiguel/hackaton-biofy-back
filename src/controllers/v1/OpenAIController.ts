@@ -1,6 +1,6 @@
 import { Controller, Inject, Injectable } from "@tsed/di";
 import { MulterOptions, MultipartFile, PlatformMulterFile } from "@tsed/common";
-import { BodyParams, HeaderParams } from "@tsed/platform-params";
+import { BodyParams, HeaderParams, QueryParams } from "@tsed/platform-params";
 import { Post } from "@tsed/schema";
 import { OpenAiService } from "../../services/OpenAIService";
 import fs from "fs";
@@ -59,10 +59,10 @@ export class OpenAIController {
     },
     dest: "./tmp-images"
   })
-  async getImageModel(@MultipartFile("file") file: PlatformMulterFile) {
+  async getImageModel(@MultipartFile("file") file: PlatformMulterFile, @QueryParams('thread') thread: string) {
     const filePath =  `tmp-images/${file.originalname}`
     fs.renameSync(file.path, filePath);
 
-    return this.openAiService.processImage(filePath)
+    return this.openAiService.processImage(filePath, thread)
   }
 }
