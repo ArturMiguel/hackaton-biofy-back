@@ -55,17 +55,21 @@ export class OpenAiService {
     };    
   }
 
-  async processImage(base64Img: string) {
+  async processImage(imagePath: string) {
+    const image = fs.readFileSync(imagePath);
+    const base64Img = `data:image/jpeg;base64,${new Buffer(image).toString('base64')}`
+
     const openAi = new OpenAI({
-      apiKey: this.apiKey
+      apiKey: this.apiKey,
     });
 
     const response = await openAi.chat.completions.create({
       model: "gpt-4-vision-preview",
+      max_tokens: 1000,
       messages: [
         {
           role: "system",
-          content: "Você é um assistente agricula para identificar problemas de saude e peste em imagens"
+          content: 'Você será um especialista chamado "IA.GRO" e seu papel é identificação de problemas de pragas em lavouras e retornar uma possível solução. Se o usuário pedir qualquer coisa diferente desse assunto retorne sempre. "Desculpe, não entendo sobre esse assunto. Sou especialista em agronegócio direcionado a identificação de pragas.". Indique sempre 3 sugestões de produto com destaque do principio ativo, inclua o principio ativo na resposta junto a cada produto. Não inclua imagens nas respostas. Retorne a reposta no formato HTML apenas o conteudo sem as tag body o head. E retorne sem nenhum processamento de markdown'
         },
         {
           role: "user",

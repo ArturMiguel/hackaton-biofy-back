@@ -53,7 +53,16 @@ export class OpenAIController {
   }
 
   @Post("/images")
-  async getImageModel(@BodyParams() body: any) {
-    return this.openAiService.processImage(body.image)
+  @MulterOptions({
+    limits: {
+      fileSize: 20000000
+    },
+    dest: "./tmp-images"
+  })
+  async getImageModel(@MultipartFile("file") file: PlatformMulterFile) {
+    const filePath =  `tmp-images/${file.originalname}`
+    fs.renameSync(file.path, filePath);
+
+    return this.openAiService.processImage(filePath)
   }
 }
