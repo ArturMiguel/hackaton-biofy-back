@@ -34,13 +34,21 @@ export class OpenAIController {
 
     fs.renameSync(file.path, filePath);
     
-    const transcription = await this.openAiService.sendAudio(filePath, thread).finally(() => {
+    const transcription = await this.openAiService.sendAudio(filePath).finally(() => {
       fs.unlinkSync(filePath);
     });
-    
 
+    const { messages, thread: threadId, lastMessage }= await this.openAiService.sendMessage(transcription.text, thread);
+    
     return {
-      transcription: transcription
+      transcription: {
+        message: transcription.text,
+        type: "USER",
+        thread: threadId
+      },
+      messages,
+      threadId,
+      lastMessage
     }
   }
 

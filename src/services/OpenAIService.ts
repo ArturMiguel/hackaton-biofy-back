@@ -85,7 +85,7 @@ export class OpenAiService {
     return response;
   }
 
-  async sendAudio(filePath: string, thread: string) {
+  async sendAudio(filePath: string) {
     const openAi = new OpenAI({
       apiKey: this.apiKey
     });
@@ -95,7 +95,7 @@ export class OpenAiService {
       model: "whisper-1",
     });
 
-    return this.sendMessage(transcription.text, thread);
+    return transcription;
   }
 
 }
