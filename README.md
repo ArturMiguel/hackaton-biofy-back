@@ -1,67 +1,45 @@
-<p style="text-align: center" align="center">
-  <a href="https://tsed.io" target="_blank"><img src="https://tsed.io/tsed-og.png" width="200" alt="Ts.ED logo"/></a>
-</p>
+# IA.GRO - Hackaton Biofy
 
-<div align="center">
-  <h1>Ts.ED - hackaton-biofy</h1>
-  <br />
-  <div align="center">
-    <a href="https://cli.tsed.io/">Website</a>
-    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://cli.tsed.io/getting-started.html">Getting started</a>
-    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://api.tsed.io/rest/slack/tsedio/tsed">Slack</a>
-    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://twitter.com/TsED_io">Twitter</a>
-  </div>
-  <hr />
-</div>
+Solução desenvolvida para o [Hackton da Biofy 2024](https://www.sympla.com.br/evento/hackathon-biofy/2346682).
 
-> An awesome project based on Ts.ED framework
+"IA.GRO" é um assistente que utiliza inteligência artificial para responder dúvidas sobre agronegócio com especialização em identificação de problemas de pragas através de texto, áudio e imagem.
 
-## Getting started
+Tecnologias utilizadas para desenvolvimento:
 
-> **Important!** Ts.ED requires Node >= 14, Express >= 4 and TypeScript >= 4.
+- Front-end
+  - https://github.com/ArturMiguel/hackaton-biofy-front
 
-```batch
-# install dependencies
-$ npm install
+- Back-end:
+  - Ts.ED
+  - Integração com a OpenAI
+    - [ChatGPT](https://platform.openai.com/docs/assistants/overview?context=with-streaming) para textos
+    - [Speech to Text](https://platform.openai.com/docs/guides/speech-to-text) para transcrever os textos e repassar para o ChatGPT
+    - [Vision](https://platform.openai.com/docs/guides/vision) para interpretar imagens
 
-# serve
-$ npm run start
+### Executar projeto localmente
 
-# build for production
-$ npm run build
-$ npm run start:prod
-```
-
-## Docker
+1) Clone o projeto e instale as dependências:
 
 ```
-# build docker image
-docker compose build
-
-# start docker image
-docker compose up
+npm ci
 ```
 
-## Barrelsby
+2) Criei um arquivo `.env` com estas variaveis:
 
-This project uses [barrelsby](https://www.npmjs.com/package/barrelsby) to generate index files to import the controllers.
+> Não publicamos as credenciais pois são serviços pagos e o repositório é publico.
 
-Edit `.barreslby.json` to customize it:
-
-```json
-{
-  "directory": [
-    "./src/controllers/v1",
-    "./src/controllers/pages"
-  ],
-  "exclude": [
-    "__mock__",
-    "__mocks__",
-    ".spec.ts"
-  ],
-  "delete": true
-}
 ```
+API_WEATHER_KEY=Chave de integração com API climática https://hgbrasil.com/
+OPENAI_API_KEY=Chave de integração com a OpenIA https://openai.com/
+OPENAI_ASSISTANT=ID do assistente criado no OpenIA
+```
+
+2) Execute o projeto digitando `npm run dev` no terminal.
+
+### Executar projeto com Docker
+
+1) Preencha as variáveis de ambiente no arquivo docker-compose.yml
+
+2) Compile o container com docker compose: `docker compose build`
+
+2) Execute o container: `docker compose up`

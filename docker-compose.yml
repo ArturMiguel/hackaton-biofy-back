@@ -9,6 +9,10 @@ services:
         - https_proxy
         - no_proxy
     image: hackaton-biofy/server:latest
+    environment: 
+      - API_WEATHER_KEY=Chave de integração com API climática https://hgbrasil.com/
+      - OPENAI_API_KEY=Chave de integração com a OpenIA https://openai.com/
+      - OPENAI_ASSISTANT=ID do assistente criado no OpenIA
     ports:
       - "8081:8081"
 
